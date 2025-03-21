@@ -1,21 +1,21 @@
-import altair as alt
-import pandas as pd
-import streamlit as st
+import altair as alt # установка декларативной библиотеки визуализации данных
+import pandas as pd # установка библиотека для обработки и анализа структурированных данных
+import streamlit as st # установка библиотеки для разработки веб-приложений
 
-# Show the page title and description.
-st.set_page_config(page_title="Movies dataset", page_icon="🎬")
-st.title("🎬 Movies dataset")
+# Показать заголовок и описание страницы.
+st.set_page_config(page_title="Данные фильмов", page_icon="🎬")
+st.title("🎬 Данные фильмов")
 st.write(
     """
-    This app visualizes data from [The Movie Database (TMDB)](https://www.kaggle.com/datasets/tmdb/tmdb-movie-metadata).
-    It shows which movie genre performed best at the box office over the years. Just 
-    click on the widgets below to explore!
+    Это приложение визуализирует данные из [Базы данных фильмов (TMDB)](https://www.kaggle.com/datasets/tmdb/tmdb-movie-metadata).
+    Оно показывает, какой жанр фильмов показал лучшие кассовые сборы за эти годы. Просто
+    нажмите на виджеты ниже, чтобы изучить!
     """
 )
 
 
-# Load the data from a CSV. We're caching this so it doesn't reload every time the app
-# reruns (e.g. if the user interacts with the widgets).
+# Загрузка данныех из CSV. Мы их кэшируем, чтобы не перезагружаться каждый раз 
+# при повторном запуске приложения (например, если пользователь взаимодействует с виджетами).
 @st.cache_data
 def load_data():
     df = pd.read_csv("data/movies_genres_summary.csv")
@@ -24,17 +24,17 @@ def load_data():
 
 df = load_data()
 
-# Show a multiselect widget with the genres using `st.multiselect`.
+# Отображение виджета множественного выбора с жанрами с помощью `st.multiselect`.
 genres = st.multiselect(
-    "Genres",
+    "Жанры",
     df.genre.unique(),
-    ["Action", "Adventure", "Biography", "Comedy", "Drama", "Horror"],
+    ["Боевик", "Приключение", "Документалка", "Комедия", "Драма", "Участик"],
 )
 
-# Show a slider widget with the years using `st.slider`.
-years = st.slider("Years", 1986, 2006, (2000, 2016))
+# Показ виджета-слайдера с годами с помощью `st.slider`.
+years = st.slider("Годы", 1986, 2006, (2000, 2016))
 
-# Filter the dataframe based on the widget input and reshape it.
+# Фильтруем фрейм данных на основе входных данных виджета и изменяем его форму.
 df_filtered = df[(df["genre"].isin(genres)) & (df["year"].between(years[0], years[1]))]
 df_reshaped = df_filtered.pivot_table(
     index="year", columns="genre", values="gross", aggfunc="sum", fill_value=0
@@ -42,14 +42,14 @@ df_reshaped = df_filtered.pivot_table(
 df_reshaped = df_reshaped.sort_values(by="year", ascending=False)
 
 
-# Display the data as a table using `st.dataframe`.
+# Отобразить данные в виде таблицы, используя `st.dataframe`.
 st.dataframe(
     df_reshaped,
     use_container_width=True,
     column_config={"year": st.column_config.TextColumn("Year")},
 )
 
-# Display the data as an Altair chart using `st.altair_chart`.
+# Отобразить данные в виде диаграммы из Altair, используя `st.altair_chart`.
 df_chart = pd.melt(
     df_reshaped.reset_index(), id_vars="year", var_name="genre", value_name="gross"
 )
