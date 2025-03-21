@@ -59,7 +59,7 @@ chart = (
     .encode(
         x=alt.X("year:N", title="Год"),
         y=alt.Y("gross:Q", title="Доход ($)"),
-        color="genre:N",
+        color="genre:N", title="Жанр"
     )
     .properties(height=320)
 )
