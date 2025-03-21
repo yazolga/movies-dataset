@@ -46,7 +46,7 @@ df_reshaped = df_reshaped.sort_values(by="year", ascending=False)
 st.dataframe(
     df_reshaped,
     use_container_width=True,
-    column_config={"year": st.column_config.TextColumn("Year")},
+    column_config={"year": st.column_config.TextColumn("Год")},
 )
 
 # Отобразить данные в виде диаграммы из Altair, используя `st.altair_chart`.
@@ -57,8 +57,8 @@ chart = (
     alt.Chart(df_chart)
     .mark_line()
     .encode(
-        x=alt.X("year:N", title="Year"),
-        y=alt.Y("gross:Q", title="Gross earnings ($)"),
+        x=alt.X("year:N", title="Год"),
+        y=alt.Y("gross:Q", title="Доход ($)"),
         color="genre:N",
     )
     .properties(height=320)
