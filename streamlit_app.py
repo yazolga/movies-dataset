@@ -18,7 +18,7 @@ st.write(
 # при повторном запуске приложения (например, если пользователь взаимодействует с виджетами).
 @st.cache_data
 def load_data():
-    df = pd.read_csv("data/movies_genres_summary.csv")
+    df = pd.read_csv("data/movies_genres_summary.csv") # файл с таблицей, на основе нее делается визуализация
     return df
 
 
@@ -26,7 +26,7 @@ df = load_data()
 
 # Отображение виджета множественного выбора с жанрами с помощью `st.multiselect`.
 genres = st.multiselect(
-    "Genres",
+    "Жанры",
     df.genre.unique(),
     ["Боевик", "Приключение", "Комедия", "Драма", "Ужастик"],
 )
@@ -49,7 +49,7 @@ st.dataframe(
     column_config={"year": st.column_config.TextColumn("Год")},
 )
 
-# Отобразить данные в виде диаграммы из Altair, используя `st.altair_chart`.
+# Отобразить данные в виде линейного графика из Altair, используя `st.altair_chart`.
 df_chart = pd.melt(
     df_reshaped.reset_index(), id_vars="year", var_name="genre", value_name="gross"
 )
